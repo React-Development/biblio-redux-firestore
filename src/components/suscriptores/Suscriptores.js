@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Link } from "react-router-dom";
 
+import Spinner from "../layout/Spinner";
+
 const Suscriptores = ({ suscriptores }) => {
-  if (!suscriptores) return <h1>Cargando...</h1>;
+  if (!suscriptores) return <Spinner />;
   console.log(suscriptores);
 
   return (
