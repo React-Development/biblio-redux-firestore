@@ -3,7 +3,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Link } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
 
@@ -11,18 +11,16 @@ const Suscriptores = ({ suscriptores, firestore }) => {
   if (!suscriptores) return <Spinner />;
   //   console.log(suscriptores);
 
-//   console.log(firestore);
-  
+  //   console.log(firestore);
 
   // Eliminar suscriptores
-  const eliminarSuscriptor = (id) => {
+  const eliminarSuscriptor = id => {
     // console.log(`Eliminando... ${id}`);
     firestore.delete({
-        collection: 'suscriptores',
-        doc: id
+      collection: "suscriptores",
+      doc: id
     });
     // .then(history.push('/suscriptores'));
-
   };
 
   return (
@@ -58,14 +56,16 @@ const Suscriptores = ({ suscriptores, firestore }) => {
                   to={`/suscriptores/mostrar/${suscriptor.id}`}
                   className="btn btn-success btn-block"
                 >
-                  <i className="fas fa-angle-double-right"></i> Más información
+                  <i className="fas fa-angle-double-right"></i> {""}
+                  Más información
                 </Link>
-                <button 
-                    type="button" 
-                    className="btn btn-danger btn-block"
-                    onClick={()=> eliminarSuscriptor(suscriptor.id)}    
+                <button
+                  type="button"
+                  className="btn btn-danger btn-block"
+                  onClick={() => eliminarSuscriptor(suscriptor.id)}
                 >
-                  <i className="fas fa-trash-alt"></i> Eliminar
+                  <i className="fas fa-trash-alt"></i> {""}
+                  Eliminar
                 </button>
               </td>
             </tr>
@@ -77,9 +77,9 @@ const Suscriptores = ({ suscriptores, firestore }) => {
 };
 
 Suscriptores.propTypes = {
-    firestore: PropTypes.object.isRequired,
-    suscriptores : PropTypes.array
-}
+  firestore: PropTypes.object.isRequired,
+  suscriptores: PropTypes.array
+};
 
 export default compose(
   /* Estos dos son potenciadores del store */
