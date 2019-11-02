@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
-import { firestore } from 'firebase';
 
 const MostrarSuscriptor = ({ suscriptor }) => {
   // console.log(suscriptor);
