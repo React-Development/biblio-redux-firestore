@@ -49,12 +49,14 @@ const Libros = ({ libros, firestore }) => {
       </div>
       <table className="table table-striped mt-4 text-center">
         <thead className="text-light bg-primary">
-          <th>Titulo</th>
-          <th>ISBN</th>
-          <th>Editorial</th>
-          <th>Existencia</th>
-          <th>Disponibles</th>
-          <th>Acciones</th>
+          <tr>
+            <th>Titulo</th>
+            <th>ISBN</th>
+            <th>Editorial</th>
+            <th>Existencia</th>
+            <th>Disponibles</th>
+            <th>Acciones</th>
+          </tr>
         </thead>
         <tbody>
           {libros.map(libro => (
