@@ -46,7 +46,7 @@ class EditarSuscriptor extends Component {
           type: "success",
           title: "Registro actualizado",
           showConfirmButton: false,
-          timer: 900
+          timer: 1000
         });
       });
   };
