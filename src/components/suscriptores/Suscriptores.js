@@ -3,21 +3,33 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import Spinner from "../layout/Spinner";
 
-const Suscriptores = ({ suscriptores }) => {
+const Suscriptores = ({ suscriptores, firestore }) => {
   if (!suscriptores) return <Spinner />;
-  console.log(suscriptores);
+  //   console.log(suscriptores);
+
+//   console.log(firestore);
+  
+
+  // Eliminar suscriptores
+  const eliminarSuscriptor = (id) => {
+    // console.log(`Eliminando... ${id}`);
+    firestore.delete({
+        collection: 'suscriptores',
+        doc: id
+    });
+    // .then(history.push('/suscriptores'));
+
+  };
 
   return (
     <div className="row">
       <div className="col-md-12 mb-4">
-        <Link 
-            to="/suscriptores/nuevo"
-            className="btn btn-primary"
-        >
-            <i className="fas fa-plus"></i> Nuevo Suscriptor
+        <Link to="/suscriptores/nuevo" className="btn btn-primary">
+          <i className="fas fa-plus"></i> Nuevo Suscriptor
         </Link>
       </div>
       <div className="col-md-8">
@@ -43,15 +55,17 @@ const Suscriptores = ({ suscriptores }) => {
               <td>{suscriptor.carrera}</td>
               <td>
                 <Link
-                to = {`/suscriptores/mostrar/${suscriptor.id}`}
+                  to={`/suscriptores/mostrar/${suscriptor.id}`}
                   className="btn btn-success btn-block"
                 >
                   <i className="fas fa-angle-double-right"></i> Más información
                 </Link>
-                <button
-                  className="btn btn-danger"
+                <button 
+                    type="button" 
+                    className="btn btn-danger btn-block"
+                    onClick={()=> eliminarSuscriptor(suscriptor.id)}    
                 >
-                  <i className="fa fa-times"></i>
+                  <i className="fas fa-trash-alt"></i> Eliminar
                 </button>
               </td>
             </tr>
@@ -61,6 +75,11 @@ const Suscriptores = ({ suscriptores }) => {
     </div>
   );
 };
+
+Suscriptores.propTypes = {
+    firestore: PropTypes.object.isRequired,
+    suscriptores : PropTypes.array
+}
 
 export default compose(
   /* Estos dos son potenciadores del store */
