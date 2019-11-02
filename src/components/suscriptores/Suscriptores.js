@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
+import Swal from "sweetalert2";
 
 const Suscriptores = ({ suscriptores, firestore }) => {
   if (!suscriptores) return <Spinner />;
@@ -16,9 +17,23 @@ const Suscriptores = ({ suscriptores, firestore }) => {
   // Eliminar suscriptores
   const eliminarSuscriptor = id => {
     // console.log(`Eliminando... ${id}`);
-    firestore.delete({
-      collection: "suscriptores",
-      doc: id
+    Swal.fire({
+      title: "Estás seguro/a?",
+      text: "No podrás revertir este cambio!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, elimínalo!",
+      cancelButtonText: "Cancelar"
+    }).then(result => {
+      if (result.value) {
+        Swal.fire("Eliminado!", "El registro ha sido eliminado.", "success");
+        firestore.delete({
+          collection: "suscriptores",
+          doc: id
+        });
+      }
     });
     // .then(history.push('/suscriptores'));
   };

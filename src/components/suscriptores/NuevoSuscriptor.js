@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { firestoreConnect } from "react-redux-firebase";
 import PropTypes from 'prop-types';
 
+import Swal from 'sweetalert2';
+
 class NuevoSuscriptor extends Component {
   state = {
     nombre: "",
@@ -30,7 +32,16 @@ class NuevoSuscriptor extends Component {
         
     // Guardarlo en la base de datos
     firestore.add({collection: 'suscriptores'}, nuevoSuscriptor)
-        .then(()=> history.push('/suscriptores'));
+        .then(()=> {
+          history.push('/suscriptores');
+          Swal.fire({
+            // position: 'top-end',
+            type: "success",
+            title: "Suscriptor añadido",
+            showConfirmButton: false,
+            timer: 1000
+          });
+        });
 };
 
   render() {

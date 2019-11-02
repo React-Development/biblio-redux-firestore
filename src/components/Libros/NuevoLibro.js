@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { firestoreConnect } from "react-redux-firebase";
 import PropTypes from "prop-types";
 
+import Swal from 'sweetalert2';
+
 class NuevoLibro extends Component {
   state = {
     titulo: "",
@@ -29,7 +31,17 @@ class NuevoLibro extends Component {
     // extraer firestore con sus metodos
     const { firestore, history } = this.props;
     // añadirlo a la base de datos y redireccionar
-    firestore.add({ collection: "libros" }, nuevoLibro).then(history.push("/"));
+    firestore.add({ collection: "libros" }, nuevoLibro).then(()=>{
+      history.push("/");
+      Swal.fire({
+        // position: 'top-end',
+        type: "success",
+        title: "Libro añadido",
+        showConfirmButton: false,
+        timer: 1000
+      });
+
+    });
   };
 
   // Almacena lo que el usuario escribe en el state
@@ -115,4 +127,7 @@ class NuevoLibro extends Component {
   }
 }
 
+NuevoLibro.propTypes = {
+    firestore: PropTypes.object.isRequired
+}
 export default firestoreConnect()(NuevoLibro);

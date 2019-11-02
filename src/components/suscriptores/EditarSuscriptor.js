@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
@@ -6,45 +6,58 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
+import Swal from "sweetalert2";
 
 class EditarSuscriptor extends Component {
+  // crear los refs
+  nombreInput = React.createRef();
+  apellidoInput = React.createRef();
+  carreraInput = React.createRef();
+  codigoInput = React.createRef();
 
-    // crear los refs
-    nombreInput = React.createRef();
-    apellidoInput = React.createRef();
-    carreraInput = React.createRef();
-    codigoInput = React.createRef();
+  // Edita el suscriptor en la base de datos
+  editarSuscriptor = e => {
+    e.preventDefault();
 
-    // Edita el suscriptor en la base de datos
-    editarSuscriptor = e => {
-        e.preventDefault();
+    // crear el objeto que va a actualizar
+    const suscriptorActualizado = {
+      nombre: this.nombreInput.current.value,
+      apellido: this.apellidoInput.current.value,
+      carrera: this.carreraInput.current.value,
+      codigo: this.codigoInput.current.value
+    };
 
-        // crear el objeto que va a actualizar
-        const suscriptorActualizado = {
-            nombre: this.nombreInput.current.value,
-            apellido: this.apellidoInput.current.value,
-            carrera: this.carreraInput.current.value,
-            codigo: this.codigoInput.current.value
-        }
+    // extraer firestore, y history de props
+    const { suscriptor, firestore, history } = this.props;
 
-        // extraer firestore, y history de props
-        const {suscriptor, firestore, history} = this.props;
+    // almacenar en la base de datos con firebase
+    firestore
+      .update(
+        {
+          collection: "suscriptores",
+          doc: suscriptor.id
+        },
+        suscriptorActualizado
+      )
+      .then(() => {
+        history.push("/suscriptores");
+        Swal.fire({
+          // position: 'top-end',
+          type: "success",
+          title: "Registro actualizado",
+          showConfirmButton: false,
+          timer: 900
+        });
+      });
+  };
 
-        // almacenar en la base de datos con firebase
-        firestore.update({
-            collection: 'suscriptores',
-            doc: suscriptor.id
-        }, suscriptorActualizado).then(history.push('/suscriptores'));
-    }
-    
-    render() { 
+  render() {
+    const { suscriptor } = this.props;
 
-        const {suscriptor} = this.props;
+    if (!suscriptor) return <Spinner />;
 
-        if(!suscriptor) return <Spinner/>
-
-        return (  
-            <div className="row">
+    return (
+      <div className="row">
         <div className="col-12 mb-4">
           <Link to="/suscriptores" className="btn btn-secondary">
             <i className="fas fa-arrow-circle-left"></i> {""}
@@ -120,24 +133,23 @@ class EditarSuscriptor extends Component {
           </div>
         </div>
       </div>
-        );
-    }
+    );
+  }
 }
- 
 
 EditarSuscriptor.propTypes = {
-    firestore : PropTypes.object.isRequired
-}
+  firestore: PropTypes.object.isRequired
+};
 
 export default compose(
-    firestoreConnect(props => [
-      {
-        collection: "suscriptores",
-        storeAs: "suscriptor",
-        doc: props.match.params.id
-      }
-    ]),
-    connect(({ firestore: { ordered } }, props) => ({
-      suscriptor: ordered.suscriptor && ordered.suscriptor[0]
-    }))
-  )(EditarSuscriptor);
+  firestoreConnect(props => [
+    {
+      collection: "suscriptores",
+      storeAs: "suscriptor",
+      doc: props.match.params.id
+    }
+  ]),
+  connect(({ firestore: { ordered } }, props) => ({
+    suscriptor: ordered.suscriptor && ordered.suscriptor[0]
+  }))
+)(EditarSuscriptor);
