@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { firestoreConnect } from "react-redux-firebase";
+import PropTypes from "prop-types";
 
 class NuevoLibro extends Component {
   state = {
@@ -15,6 +17,22 @@ class NuevoLibro extends Component {
       [e.target.name]: e.target.value
     });
   };
+
+  // Guardar libro en la base de datos
+  agregarLibro = e => {
+    e.preventDefault();
+
+    // tomar una copia del state
+    const nuevoLibro = this.state;
+    //agregar un arreglo de prestados
+    nuevoLibro.prestados = [];
+    // extraer firestore con sus metodos
+    const { firestore, history } = this.props;
+    // añadirlo a la base de datos y redireccionar
+    firestore.add({ collection: "libros" }, nuevoLibro).then(history.push("/"));
+  };
+
+  // Almacena lo que el usuario escribe en el state
 
   render() {
     return (
@@ -32,7 +50,7 @@ class NuevoLibro extends Component {
           </h2>
           <div className="row justify-content-center">
             <div className="col-md-8 mt-5">
-              <form>
+              <form onSubmit={this.agregarLibro}>
                 <div className="form-group">
                   <label>Titulo: </label>
                   <input
@@ -83,7 +101,11 @@ class NuevoLibro extends Component {
                   />
                 </div>
 
-                <input type="submit" value="Agregar Libro" className="btn btn-success" />
+                <input
+                  type="submit"
+                  value="Agregar Libro"
+                  className="btn btn-success"
+                />
               </form>
             </div>
           </div>
@@ -93,4 +115,4 @@ class NuevoLibro extends Component {
   }
 }
 
-export default NuevoLibro;
+export default firestoreConnect()(NuevoLibro);
