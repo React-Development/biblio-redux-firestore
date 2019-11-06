@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
-import { logicalExpression } from "@babel/types";
+import FichaSuscriptor from "../suscriptores/FichaSuscriptor";
 // import Swal from "sweetalert2";
 
 class PrestamoLibro extends Component {
@@ -63,6 +63,27 @@ class PrestamoLibro extends Component {
 
     if (!libro) return <Spinner />;
 
+    // extraer los  datos del alumno
+    const { noResultados, resultado } = this.state;
+
+    let fichaAlumno, btnSolicitar;
+
+    if (resultado.nombre) {
+      fichaAlumno = <FichaSuscriptor alumno={resultado} />;
+      btnSolicitar = (
+        <button
+          type="button"
+          className="btn btn-primary btn-block mb-3"
+          onClick={this.solicitarPrestamo}
+        >
+          Solicitar Prestamo
+        </button>
+      );
+    } else {
+      fichaAlumno = null;
+      btnSolicitar = null;
+    }
+
     return (
       <div className="row">
         <div className="col-12 mb-4">
@@ -79,7 +100,7 @@ class PrestamoLibro extends Component {
           </h2>
           <div className="row justify-content-center mt-5">
             <div className="col-md-8">
-              <form onSubmit={this.buscarAlumno}>
+              <form onSubmit={this.buscarAlumno} className="mb-4">
                 <legend className="color-primary text-center">
                   Busca el Suscriptor por Código
                 </legend>
@@ -98,6 +119,9 @@ class PrestamoLibro extends Component {
                   className="btn btn-success btn-block"
                 />
               </form>
+              {/* Muestra la ficha del alumno y el boton para solicitar el prestamo */}
+              {fichaAlumno}
+              {btnSolicitar}
             </div>
           </div>
         </div>
