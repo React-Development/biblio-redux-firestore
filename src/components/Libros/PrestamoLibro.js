@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
 import FichaSuscriptor from "../suscriptores/FichaSuscriptor";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 class PrestamoLibro extends Component {
   state = {
@@ -55,6 +55,43 @@ class PrestamoLibro extends Component {
         // console.log(response);
       }
     });
+  };
+
+  // Almaceno los datos del  alumno para solicitar el libro
+  solicitarPrestamo = () => {
+    const suscriptor = this.state.resultado;
+
+    // fecha de alta
+    suscriptor.fecha_solicitud = new Date().toLocaleDateString();
+
+    // obtener el libro
+    const libroActualizado = this.props.libro;
+
+    // agregar  el suscriptor al libro
+    libroActualizado.prestados.push(suscriptor);
+
+    // obtener firestore y history de  props
+    const { firestore, history, libro } = this.props;
+
+    // almacenar en la BD
+    firestore
+      .update(
+        {
+          collection: "libros",
+          doc: libro.id
+        },
+        libroActualizado
+      )
+      .then(() => {
+        Swal.fire({
+          // position: 'top-end',
+          type: "success",
+          title: "Prestamo realizado satisfactoriamente",
+          showConfirmButton: false,
+          timer: 1000
+        });
+        history.push("/");
+      });
   };
 
   render() {
