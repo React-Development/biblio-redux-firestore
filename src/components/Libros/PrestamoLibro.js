@@ -6,10 +6,57 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
+import { logicalExpression } from "@babel/types";
 // import Swal from "sweetalert2";
 
 class PrestamoLibro extends Component {
-  state = {};
+  state = {
+    noResultados: false,
+    busqueda: "",
+    resultado: {}
+  };
+
+  // Buscar alumno por codigo
+  leerDato = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Almacenar el codigo en el state
+  buscarAlumno = e => {
+    e.preventDefault();
+
+    // obtener el valor a buscar
+    const { busqueda } = this.state;
+
+    // extraer firestore
+    const { firestore } = this.props;
+
+    // hacer la  consulta
+    const coleccion = firestore.collection("suscriptores");
+    const consulta = coleccion.where("codigo", "==", busqueda).get();
+
+    // leer los resultados
+    consulta.then(response => {
+      if (response.empty) {
+        // no hay resultados
+        this.setState({
+          noResultados: true,
+          resultado: {}
+        });
+      } else {
+        const datos = response.docs[0];
+        console.log(datos.data());
+        this.setState({
+          resultado: datos.data(),
+          noResultados: false
+        });
+        // console.log(response);
+      }
+    });
+  };
+
   render() {
     // Extraer el libro
     const { libro } = this.props;
@@ -30,12 +77,26 @@ class PrestamoLibro extends Component {
             <i className="fas fa-book"></i> {""}
             Solicitar Prestamo: {libro.titulo}
           </h2>
-          <div className="row justify-content-center">
+          <div className="row justify-content-center mt-5">
             <div className="col-md-8">
-              <form>
+              <form onSubmit={this.buscarAlumno}>
                 <legend className="color-primary text-center">
                   Busca el Suscriptor por Código
                 </legend>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    name="busqueda"
+                    className="form-control"
+                    onChange={this.leerDato}
+                  />
+                </div>
+                <input
+                  type="submit"
+                  value="Buscar Alumno"
+                  className="btn btn-success btn-block"
+                />
               </form>
             </div>
           </div>
