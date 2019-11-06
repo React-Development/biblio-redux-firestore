@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Spinner from "../layout/Spinner";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 
 class PrestamoLibro extends Component {
   state = {};

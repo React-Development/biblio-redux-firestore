@@ -11,7 +11,7 @@ class MostrarLibro extends Component {
   state = {};
   render() {
     // extraer el libro
-    const { libro, match } = this.props;
+    const { libro } = this.props;
 
     if (!libro) return <Spinner />;
 
